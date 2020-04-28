@@ -21,6 +21,7 @@ Features(+TODO)
 - [x] 회원 목록 API
 - [x] 회원 상세 API
 - [x] 로그인 API(with jwt)
+- [ ] 회원 검색 API (email, name + pagination)
 - [ ] 회원 목록 API 페이지네이션
 - [ ] 조회 쿼리 캐싱
 - [ ] Class Autoload 할 수 있게 변경
