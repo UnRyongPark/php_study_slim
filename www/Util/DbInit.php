@@ -17,7 +17,7 @@ class DbInit
 
         $result = '';
 
-        if ($con->query('create schema wrongStudy;') === true) {
+        if ($con->query('create schema wrongStudy DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;') === true) {
             $result .= "Schema successfully created.\n";
         }
 
@@ -37,7 +37,9 @@ class DbInit
                                         signup_date timestamp not null,
                                         constraint users_pk
                                             primary key (id)
-                                    );') === true) {
+                                    )
+                                    ENGINE = InnoDB
+                                    DEFAULT CHARACTER SET = utf8mb4 COLLATE utf8mb4_general_ci;') === true) {
             $result .= "Table successfully created.\n";
         }
 
