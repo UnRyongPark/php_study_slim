@@ -1,0 +1,7 @@
+/.idea
+/.idea/*
+
+/database/**
+/www/vendor
+
+.DS_Store
