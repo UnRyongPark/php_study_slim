@@ -2,7 +2,6 @@
 
 namespace DataModel;
 
-use Respect\Validation\Rules\Key;
 use Respect\Validation\Validator as v;
 
 Class User

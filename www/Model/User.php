@@ -5,9 +5,9 @@ namespace Model;
 require_once '../Util/DbConn.php';
 require_once '../DataModel/User.php';
 
+use DataModel\User as UserModel;
 use stdClass;
 use Util\DbConn;
-use DataModel\User as UserModel;
 
 class User
 {
@@ -26,6 +26,72 @@ class User
         $readCon = $this->dbConn->getReadCon();
         $list = [];
         if ($result = $readCon->query('select * from wrongStudy.users;')) {
+            while ($obj = $result->fetch_object(UserModel::class)) {
+                $list[] = $obj;
+            }
+        }
+
+        return $list;
+    }
+
+    /**
+     * @param string $k
+     * @param int $offset
+     * @param int $count
+     * @return UserModel[]
+     */
+    public function findUsersByName(string $k, int $offset = 0, int $count = 15): array
+    {
+        $q = $this->dbConn->getReadCon()->prepare('select * from wrongStudy.users where name = ? limit ?, ?;');
+        $q->bind_param('sii', $k, $offset, $count);
+        $q->execute();
+
+        $list = [];
+
+        if ($result = $q->get_result()) {
+            while ($obj = $result->fetch_object(UserModel::class)) {
+                $list[] = $obj;
+            }
+        }
+
+        return $list;
+    }
+
+    /**
+     * @param string $k
+     * @param int $offset
+     * @param int $count
+     * @return UserModel[]
+     */
+    public function findUsersByNameStartParts(string $k, int $offset = 0, int $count = 15): array
+    {
+        $q = $this->dbConn->getReadCon()->prepare('select * from wrongStudy.users where `name` like ? limit ?, ?;');
+        $q->bind_param('sii', $k, $offset, $count);
+        $q->execute();
+
+        $list = [];
+
+        if ($result = $q->get_result()) {
+            while ($obj = $result->fetch_object(UserModel::class)) {
+                $list[] = $obj;
+            }
+        }
+
+        return $list;
+    }
+
+    /**
+     * @return UserModel[]
+     */
+    public function findUsersByEmailStartParts($k, $offset = 0, $count = 15): array
+    {
+        $q = $this->dbConn->getReadCon()->prepare('select * from wrongStudy.users where email Like ? limit ?, ?;');
+        $q->bind_param('sii', $k, $offset, $count);
+        $q->execute();
+
+        $list = [];
+
+        if ($result = $q->get_result()) {
             while ($obj = $result->fetch_object(UserModel::class)) {
                 $list[] = $obj;
             }

@@ -7,7 +7,7 @@ Spec
 -------------
 * API Server(자세한 사항은 Dockerfile 참조)
     * ubuntu 18.04LTS
-    * PHP 7.3+
+    * PHP 7.4+
     * Slim 4.+
     * Nginx
     * ETC
@@ -21,8 +21,8 @@ Features(+TODO)
 - [x] 회원 목록 API
 - [x] 회원 상세 API
 - [x] 로그인 API(with jwt)
-- [ ] 회원 검색 API (email, name + pagination)
-- [ ] 회원 목록 API 페이지네이션
+- [x] 회원 검색 API (email, name + pagination)
+- [x] 회원 목록 API 페이지네이션 -> 추후 Feature 삭제하는 것으로 대체
 - [ ] 조회 쿼리 캐싱
 - [ ] Class Autoload 할 수 있게 변경
 - [ ] Code Cleanup
@@ -30,6 +30,7 @@ Features(+TODO)
 Initialize
 -------------
 1. Host 설정(해당 프로젝트는 study.wrong.tips라는 도메인으로 테스트함)
+> 만약 해당 도메인이 아니라 다른 도메인으로 테스트하려면 /docker/conf/nginx.conf에서 도메인 정보 수정
 2. start.sh 스크립트 실행(MySQL Database, API Server Container Start)
 3. http://{host}:8080/를 호출하면 자동으로 Schema와 Table 생성됨
 
@@ -54,6 +55,14 @@ https://documenter.getpostman.com/view/631821/SzfDvPxZ
 * [GET] /user
     * 사용자 목록 API
         * Header에 ID-TOKEN 필요
+    * 사용자 검색 API
+        * Header에 ID-TOKEN 필요
+        * Query param 필요
+            * k => keyword(검색어, 1자 이상 문자열)
+            * t => target(대상, [name, email])
+            * ty => type(검색방법, [match, startPart])
+            * o => offset(위치, 0부터 시작)
+            * c => count(개수, 1~15사이 정수)
 * [GET] /user/{id}
     * 사용자 조회 API
         * Header에 ID-TOKEN 필요

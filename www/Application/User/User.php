@@ -6,9 +6,10 @@ require_once '../Model/User.php';
 require_once '../DataModel/User.php';
 
 
+use DataModel\User as UserDataModel;
 use Firebase\JWT\JWT;
 use Model\User as UserModel;
-use DataModel\User as UserDataModel;
+use Respect\Validation\Validator as v;
 
 
 class User
@@ -35,6 +36,55 @@ class User
 
 
         return $list;
+    }
+
+    /**
+     * @param object $jsonArr
+     * @return array|mixed
+     */
+    public function searchUser(object $jsonArr)
+    {
+        $validator = v::attribute('k', v::stringType()->length(1, 20)->notOptional()->notBlank()->noWhitespace())
+            ->attribute('o', v::IntVal()->min(0)->notOptional()->noWhitespace())
+            ->attribute('c', v::IntVal()->min(1)->max(15)->positive()->notOptional()->notBlank()->noWhitespace())
+            ->attribute('t', v::in(['name', 'email'])->notBlank()->notOptional()->noWhitespace())
+            ->attribute('ty', v::in(['match', 'startPart'])->notBlank()->notOptional()->noWhitespace());
+
+        if ($validator->assert($jsonArr)) {
+            switch ($jsonArr->t) {
+                case 'name':
+                    if ($jsonArr->ty === 'match') {
+                        return array_reduce($this->model->findUsersByName($jsonArr->k, $jsonArr->o, $jsonArr->c),
+                            static function ($carry, UserDataModel $d) {
+                                $carry[] = $d->getOutputData();
+                                return $carry;
+                            }, []);
+                    } else {
+                        return array_reduce($this->model->findUsersByNameStartParts($jsonArr->k . '%', $jsonArr->o,
+                            $jsonArr->c), static function ($carry, UserDataModel $d) {
+                            $carry[] = $d->getOutputData();
+                            return $carry;
+                        }, []);
+                    }
+                    break;
+                case 'email':
+                    if ($jsonArr->ty === 'match') {
+                        return [$this->model->findUserByEmail($jsonArr->k)->getOutputData()];
+                    } else {
+                        return array_reduce($this->model->findUsersByEmailStartParts($jsonArr->k . '%', $jsonArr->o,
+                            $jsonArr->c), static function ($carry, UserDataModel $d) {
+                            $carry[] = $d->getOutputData();
+                            return $carry;
+                        }, []);
+                    }
+                    break;
+                default:
+                    throw new \RuntimeException('not found search type');
+                    break;
+            }
+        }
+
+        throw new \RuntimeException('not found search type');
     }
 
     /**
