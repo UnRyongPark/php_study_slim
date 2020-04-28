@@ -1,0 +1,13 @@
+{
+    "require": {
+        "illuminate/database": "^7.8",
+        "slim/slim": "^4.0",
+        "slim/http": "^1.0",
+        "guzzlehttp/psr7": "^1.6",
+        "http-interop/http-factory-guzzle": "^1.0",
+        "php-di/php-di": "^6.1",
+        "davidepastore/slim-validation": "^0.5.1",
+        "firebase/php-jwt": "^5.2",
+        "slim/psr7": "^1.0"
+    }
+}
