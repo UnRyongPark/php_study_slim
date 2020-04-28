@@ -5,3 +5,5 @@
 /www/vendor
 
 .DS_Store
+
+!database/.keep
